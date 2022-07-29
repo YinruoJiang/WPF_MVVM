@@ -1,0 +1,57 @@
+﻿<Window x:Class="WPFNotepad.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ig="http://schemas.infragistics.com/xaml"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:local="clr-namespace:WPFNotepad"
+        xmlns:viewmodels="clr-namespace:WPFNotepad.ViewModels"
+        mc:Ignorable="d"
+        x:Name="NotepadWindow"
+        Title="Notepad" Height="400" Width="525"
+        WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <viewmodels:MainViewModel/>
+    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing" >
+            <i:InvokeCommandAction Command="{Binding File.CloseCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <DockPanel Margin="1">
+        <Menu DockPanel.Dock="Top">
+            <Menu.Items>
+                <MenuItem Header="File" DataContext="{Binding File}">
+                    <MenuItem Header="New" Command="{Binding NewCommand}"/>
+                    <MenuItem Header="Open" Command="{Binding OpenCommand}"/>
+                    <MenuItem Header="Save as..." Command="{Binding SaveAsCommand}"/>
+                    <MenuItem Header="Close" Command="{Binding CloseCommand}"
+                              CommandParameter="{Binding ElementName=NotepadWindow}"/>
+                </MenuItem>
+                <MenuItem Header="Options"></MenuItem>
+                <MenuItem Header="Help" DataContext="{Binding Help}">
+                    <MenuItem Header="About" Command="{Binding HelpCommand}"/>
+                </MenuItem>
+            </Menu.Items>
+        </Menu>
+
+        <DockPanel>
+            <StatusBar DockPanel.Dock="Bottom">
+                <StatusBarItem>
+                    <TextBlock Name="lblCursorPosition" />
+                </StatusBarItem>
+            </StatusBar>
+
+            <TextBox DockPanel.Dock="Top"
+                     VerticalScrollBarVisibility="Visible"
+                     DataContext="{Binding File}"
+                     AcceptsReturn="True"
+                     Name="txtEditor"
+                     SelectionChanged="txtEditor_SelectionChanged"
+                     Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     />
+        </DockPanel>
+    </DockPanel>
+</Window>
